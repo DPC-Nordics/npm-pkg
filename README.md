@@ -1,10 +1,12 @@
 # Publish an NPM package
 
-Thought it is simple to publish a rudimentary NPM package, there are a lot of pitfalls. The following guide only covers the basics. For more advanced and thorough guide, check out guide by [Matt Pocock at TotalTypescript](https://www.totaltypescript.com/how-to-create-an-npm-package).
+Thought it is simple to publish a rudimentary NPM package, there are a lot of pitfalls. The following guide only covers the basics. For more advanced and thorough guide, check out guide by [Matt Pocock at TotalTypescript](https://www.totaltypescript.com/how-to-create-an-npm-package). It contains steps for tooling like linting with ESlint, formatting with Prettier, testing with Vitest and more.
+
+As a DDP member, you can also clone/fork this repository to get started. You can also use this repository as a `template` to make sure you get clean setup without any backlinks to this repo.
 
 ## Setup
 
-Follow guide at end to setup Git for your package
+> Follow guide at end to setup Git for your package
 
 ### Setup Local environment
 
@@ -138,34 +140,35 @@ Follow guide at end to setup Git for your package
 name: Publish
 on:
   push:
-  branch:
-    - "main"
-workflow_dispatch:
-
+    branches:
+      - "main"
+env:
+  NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   publish:
-  env:
-    NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-  permissions:
-    contents: read
-    id-token: write
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Setup node
-      uses: actions/setup-node@v4
-      with:
-      node-version: 20
-      cache: "npm"
-    - name: Setup NPM TOKEN
-      run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-    - name: Install dependencies
-      run: npm ci
-    - name: Build package
-      run: npm build
-    - name: Publish to NPM
-      run: npm publish
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+      - name: Setup NPM TOKEN
+        run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+      - name: Install dependencies
+        run: npm ci
+      - name: Build package
+        run: npm build
+      - name: Publish to NPM
+        run: npm publish
 ```
 
 - Create an account on [GitHub](https://github.com).

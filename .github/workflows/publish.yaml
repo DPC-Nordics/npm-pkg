@@ -1,31 +1,32 @@
 name: Publish
 on:
   push:
-  branch:
-    - "main"
-workflow_dispatch:
-
+    branches:
+      - "main"
+env:
+  NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   publish:
-  env:
-    NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-  permissions:
-    contents: read
-    id-token: write
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Setup node
-      uses: actions/setup-node@v4
-      with:
-      node-version: 20
-      cache: "npm"
-    - name: Setup NPM TOKEN
-      run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-    - name: Install dependencies
-      run: npm ci
-    - name: Build package
-      run: npm build
-    - name: Publish to NPM
-      run: npm publish
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+      - name: Setup NPM TOKEN
+        run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+      - name: Install dependencies
+        run: npm ci
+      - name: Build package
+        run: npm build
+      - name: Publish to NPM
+        run: npm publish
