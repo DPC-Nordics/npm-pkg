@@ -132,7 +132,7 @@ Follow guide at end to setup Git for your package
   .DS_Store
   ```
 
-- Add file `publish.yaml` in folder `.github/workflow` in your package folder with following content:
+- Add file `publish.yaml` in folder `.github/workflows` in your package folder with following content:
 
 ```yaml
 name: Publish
