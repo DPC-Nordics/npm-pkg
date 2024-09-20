@@ -117,7 +117,7 @@ Follow guide at end to setup Git for your package
 
 - Run `npm install` in directory to install dependencies
 - Run `npm run build` to build the package
-- Run `npm publish` to publish package.
+- Run `npm publish` to publish package. (make sure `.npmrc` file exist before publishing.)
 
 ## Setup Git and Github CI
 
